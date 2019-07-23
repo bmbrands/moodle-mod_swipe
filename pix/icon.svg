@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMinYMid meet" overflow="visible" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="Unbenannter_Verlauf_12" x1="121" y1="6.5" x2="121" y2="239.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c1272d"/>
+      <stop offset="0.07" stop-color="#cc2025"/>
+      <stop offset="0.26" stop-color="#e21215"/>
+      <stop offset="0.46" stop-color="#f20809"/>
+      <stop offset="0.69" stop-color="#fc0202"/>
+      <stop offset="1" stop-color="red"/>
+    </linearGradient>
+  </defs>
+  <linearGradient id="f" gradientUnits="userSpaceOnUse" x1="11.967" y1="12.167" x2="11.967" y2="23.885" gradientTransform="matrix(1, 0, 0, 1, 0, 0)">
+    <stop offset="0" stop-color="#DDA976"/>
+    <stop offset="1" stop-color="#9F6B37"/>
+  </linearGradient>
+  <g id="Ebene_3" data-name="Ebene 3" style="" transform="matrix(0.052692, 0, 0, 0.052692, 8.60869, 2.648341)">
+    <path class="cls-1" d="M 121.5 42.5 C 121.5 42.5 112.5 7.5 61.5 7.5 C 34.5 7.5 3 37 2.5 84.5 C 1.77 153.5 115.716 210.2 115.716 210.2 C 115.716 210.2 238.74 159.5 239.5 87.5 C 240 40 205.5 6.5 179.5 6.5 C 144.5 6.5 121.5 42.5 121.5 42.5 Z" transform="translate(-2.5 -6.5)" style="fill: url(#Unbenannter_Verlauf_12);"/>
+  </g>
+  <path d="M 10 18.9 C 9.7 16.7 19.4 19.4 19.3 17.5 C 19.3 16.7 10.9 14.1 7.9 13.4 C 7 13.2 1.4 12.2 1.4 12.2 C 1.2 12.3 0.1 15.5 0 17.4 C 0.5 17.7 7.3 24.1 10 23.9 C 12.7 23.7 24.2 20.3 23.9 19.2 C 23.3 17.1 10.3 21.3 10 18.9 Z" fill="url(#f)"/>
+  <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="11.489" y1="13.28" x2="11.489" y2="22.934">
+    <stop offset="0" stop-color="#FDA"/>
+    <stop offset="1" stop-color="#E3B17E"/>
+  </linearGradient>
+  <path d="M1.7 17.4c-.3-.2-.5-.4-.7-.5.1-1.2.6-2.8.9-3.6 1.8.3 5.1.9 5.7 1 2.6.6 9.4 2.3 9.7 3 .5 1.1-8.3-1.9-8.1 1.7.2 3.5 12.4-.6 12.7.5.2.7-10.1 3.6-12 3.5-2-.2-6.6-4.2-8.2-5.6z" fill="url(#g)"/>
+  <linearGradient id="h" gradientUnits="userSpaceOnUse" x1="7.593" y1="14.414" x2="7.593" y2="21.934">
+    <stop offset="0" stop-color="#F1C592"/>
+    <stop offset="1" stop-color="#E1AF7C"/>
+  </linearGradient>
+  <path d="M10.1 21.9c-.8-.1-2.8-1-7.6-5.2l-.3-.3c.1-.7.3-1.4.5-2.1 2.1.4 4.3.8 4.7.9 1.5.4 2.7.7 3.8.9-1 .1-1.8.4-2.3 1-.3.3-.7.9-.6 1.9.1 1.1.8 2.4 4 2.4h.9c-1.4.3-2.5.5-3.1.5z" fill="url(#h)"/>
+</svg>

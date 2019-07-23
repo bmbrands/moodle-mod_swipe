@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>amd/src/textFit.js</location>
+    <name>textFit by by STRML strml.github.com</name>
+    <license>MIT</license>
+    <version>2.3.1</version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>amd/src/tinder.js</location>
+    <name>jTinder by do-web https://github.com/do-web/jTinder</name>
+    <license>GPL</license>
+    <version>1.0.0</version>
+    <licenseversion>2</licenseversion>
+  </library>
+  <library>
+    <location>amd/src/transform.js</location>
+    <name>Transform by louis_remi</name>
+    <license>MIT</license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+</libraries>

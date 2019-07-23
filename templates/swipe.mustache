@@ -1,0 +1,148 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_swipe/swipe
+
+    Example context (json):
+    {
+    }
+}}
+
+<h1>{{{ swipename }}}</h1>
+
+<div id="swipe-slider" class="swipelike">
+
+    {{#warning}}
+        <div class="alert alert-danger">
+            {{{warning}}}
+        </div>
+    {{/warning}}
+
+    <div class="wrap {{^hascards}}hidden{{/hascards}}" data-region="swipe-wrapper">
+
+        <!-- start jtinder container -->
+        <div id="tinderslide">
+            {{#endofdeck}}
+            <div class="endofdeck">
+                {{{endofdeck}}}
+            </div>
+            {{/endofdeck}}
+            <ul>
+                {{#cards}}
+                <li class="pane card {{#first}} boxshadow {{/first}}"
+                    data-card-id="{{id}}"
+                    data-card-type="{{type}}"
+                    data-preload="{{preloadid}}"
+                    {{#last}}data-last="true"{{/last}}
+                    {{#isimage}} data-card-image="{{{ img }}}" {{/isimage}}
+                    {{#isvideo}} data-card-video="{{{ embed }}}" {{/isvideo}}
+                >
+                    <div class="position-relative w-100 h-100 p-2 {{^showcardfooter}}nofooter{{/showcardfooter}}">
+                        {{#isimage}}
+                        <div class="card-image" data-region="card-image" {{#preload}} style="background-image: url({{{ img}}});" {{/preload}}>
+                        </div>
+                        {{/isimage}}
+                        {{#isvideo}}
+                        <div class="card-video d-flex align-items-center">
+                            <iframe width="382" data-region="card-video" {{#preload}} src="{{{ embed }}}" {{/preload}} height="225" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                            </iframe>
+                        </div>
+                        {{/isvideo}}
+                        {{#istext}}
+                            <div class="card-text text-center">
+                                <div class="inner innertext" style="width: 382; height: 160px;">
+                                    {{{ text }}}
+                                </div>
+                            </div>
+                        {{/istext}}
+                        {{#showcardfooter}}
+                        <div class="d-flex flex-nowrap card-footer">
+                            {{^istext}}
+                            <div class=" text-truncate">
+                                {{{ caption }}}
+                            </div>
+                            {{/istext}}
+                            <div class="likes ml-auto muted"><i class="fa fa-heart"></i> {{like.likes}}</div>
+                        </div>
+                        {{/showcardfooter}}
+                        <div class="like" style="background: url('{{{ modurl }}}/yes.png') no-repeat scroll 0 0;"></div>
+                        <div class="dislike" style="background: url('{{{ modurl }}}/no.png') no-repeat scroll 0 0;"></div>
+                        <div class="card-info position-absolute bg-white p-2" data-region="card-info" style="top: -420px; height: 420px; left: 0; right:0" data-status="closed">
+                            <div class="info-header d-flex">
+                                <button class="btn btn-default rounded ml-auto" data-action="close-info">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <pre>
+                        </pre>
+                            <div class="list-group list-group-flush">
+                            {{#info.fields}}
+                                {{#value}}
+                                <div class="list-group-item p-1 {{name}} d-flex">
+                                    <strong>{{{ displayname }}}</strong>: {{{ value }}}
+                                </div>
+                                {{/value}}
+                            {{/info.fields}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {{/cards}}
+            </ul>
+        </div>
+        <!-- end jtinder container -->
+    </div>
+    <!-- end padding container -->
+    <div class="feedback form-group {{#hascards}}hidden{{/hascards}}{{#emptydeck}}hidden{{/emptydeck}} mt-3 mb-5 p-3 bg-light" data-region="feedback-container" data-swipeid="{{swipeid}}">
+        <div class="feedback-input {{^cancomment}}hidden{{/cancomment}}" data-region="feedback-input">
+            <label for="galleryfeedback">{{#str}} feedback, mod_swipe {{/str}}</label>
+            <textarea class="form-control rounded" id="galleryfeedback" placeholder="{{#str}}enterfeedback, mod_swipe{{/str}}" rows="6" data-region="feedback-text"></textarea>
+            <div class="d-flex">
+                <button type="submit" class="btn btn-primary mb-2 mt-1 rounded ml-auto" data-action="send-feedback">{{#str}}sendfeedback, mod_swipe{{/str}}</button>
+            </div>
+        </div>
+        <div class="thankyou {{#cancomment}}hidden{{/cancomment}} my-5 bg-light" data-region="feedback-thanks">
+            <div class="message text-center w-100"><h3><i class="fa fa-heart-o thankyouicon mr-2"></i>{{#str}}thankyou, mod_swipe{{/str}}</h3></div>
+        </div>
+    </div>
+
+    <!-- jTinder trigger by buttons  -->
+    {{#hascards}}
+    <div class="cardactions actionsb" data-region="cardactions">
+        <!--<a href="#" class="info small" data-action="info"><i class="fa fa-info"></i></a>!-->
+        <div class="d-flex justify-content-center">
+            <a href="#" class="dislike" data-action="dislike"><i class="fa fa-times"></i></a>
+            <a href="#" class="like" data-action="like"><i class="fa fa-check"></i></a>
+        </div>
+    </div>
+    {{/hascards}}
+
+    {{#canedit}}
+    <div class="d-flex my-2 justify-content-center">
+        <a href="{{{ editurl }}}" class="btn btn-default rounded">Edit cards</a>
+    </div>
+    {{/canedit}}
+
+
+
+</div>
+{{#js}}
+require(['jquery', 'mod_swipe/swipe_wrapper'], function($, Swipe) {
+    var root = '#swipe-slider';
+    Swipe.init(root);
+});
+{{/js}}
