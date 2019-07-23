@@ -1,0 +1,171 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_swipe/swipe
+
+    Example context (json):
+    {
+    }
+}}
+
+<h1>{{{ galleryname }}}</h1>
+<div class="clearfix"></div>
+<a class="btn btn-secondary mb-2" href="{{{ reportdownloadurl }}}">
+    <i class="fa fa-download"></i>
+    {{#str}} downloadswipereport, mod_swipe {{/str}}
+</a>
+<div class="swipereport clearfix">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-md-9">
+                <div class="container-fluid">
+                    <div class="row border-bottom border-top border-left border-right">
+                        <div class="col-md-6 text-center heading p-2">
+                            <div class="d-flex justify-content-center align-items-center">
+                            {{#sortcards}}
+                                <h3>{{#str}}card, mod_swipe{{/str}}</h3>
+                                {{< mod_swipe/sort_icons }}
+                                    {{$sort}}{{#str}} card, mod_swipe {{/str}}{{/sort}}
+                                {{/ mod_swipe/sort_icons }}
+                            {{/sortcards}}
+                            {{^sortcards}}
+                            <a class="h3" href="{{{ sortcardsurl }}}">
+                                {{#str}}card, mod_swipe{{/str}}
+                            </a>
+                            {{/sortcards}}
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center heading p-2">
+                            <div class="d-flex justify-content-center align-items-center">
+                            {{#sortdislike}}
+                                <span class="dislike">
+                                    <i class="fa fa-times fa-2x"></i>
+                                </span>
+                                {{< mod_swipe/sort_icons }}
+                                    {{$sort}}{{#str}} disliked, mod_swipe {{/str}}{{/sort}}
+                                {{/ mod_swipe/sort_icons }}
+                            {{/sortdislike}}
+                            {{^sortdislike}}
+                                <a class="dislike" href="{{{ sortdislikeurl }}}">
+                                    <i class="fa fa-times fa-2x"></i>
+                                </a>
+                            {{/sortdislike}}
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center heading p-2">
+                            <div class="d-flex justify-content-center align-items-center">
+                            {{#sortlike}}
+                                <span class="like">
+                                    <i class="fa fa-check fa-2x"></i>
+                                </span>
+                                {{< mod_swipe/sort_icons }}
+                                    {{$sort}}{{#str}} liked, mod_swipe {{/str}}{{/sort}}
+                                {{/ mod_swipe/sort_icons }}
+                            {{/sortlike}}
+                            {{^sortlike}}
+                                <a class="like" href="{{{ sortlikeurl }}}">
+                                    <i class="fa fa-check fa-2x"></i>
+                                </a>
+                            {{/sortlike}}
+                            </div>
+                        </div>
+                    </div>
+                    {{#cards}}
+                    <div class="row border-bottom border-left border-right">
+                        <div class="col-md-6 text-center">
+                            <div class="media-container card mb-2 mt-2 rounded ml-auto mr-auto"
+                                data-card-id="{{id}}"
+                                data-card-type="{{type}}"
+                                style="width: 300px; min-height: 250px;"
+                            >
+                                {{#isimage}}
+                                image
+                                <div class="card-image" data-region="card-image w-100" style="background-image: url({{{ img}}}); height: 300px; background-size: cover">
+                                </div>
+                                {{/isimage}}
+                                {{#isvideo}}
+                                video
+                                <div class="card-video d-flex align-items-center">
+                                    <iframe width="382" data-region="card-video" src="{{{ embed }}}" height="225" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                                    </iframe>
+                                </div>
+                                {{/isvideo}}
+                                {{#istext}}
+                                    <div class="card-text text-center">
+                                        <div class="inner">
+                                            {{{ text }}}
+                                        </div>
+                                    </div>
+                                {{/istext}}
+                                <div class="d-flex flex-nowrap card-footer mt-auto">
+                                    <div class=" text-truncate">
+                                        {{{ caption }}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3>{{{dislikes}}}</h3>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3>{{{likes}}}</h3>
+                        </div>
+                    </div>
+                    {{/cards}}
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <h3>{{#str}}comments, mod_swipe{{/str}}</h3>
+                <div class="list-group">
+                {{#comments}}
+                    <div class="w-100 list-group-item">
+                        <div class="d-flex mb-2">
+                            <div>{{name}}</div>
+                            <div class="ml-auto muted small">
+                                {{#userdate}} {{feedbackcreated}}, {{#str}} strftimedatefullshort, core_langconfig  {{/str}} {{/userdate}}
+                            </div>
+                        </div>
+                        <p class="bg-light p-1 m-0">{{feedback}}</p>
+                    </div>
+                {{/comments}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions d-flex justify-content-center mt-3">
+        <a class="m-action btn btn-default mr-2" href="{{{additem}}}">
+            <i class="fa fa-fw fa-plus"></i>
+            {{#str}}addcard, mod_swipe{{/str}}
+        </a>
+        <a class="m-action btn btn-default mr-2" href="{{{view}}}">
+            <i class="fa fa-fw fa-eye"></i>
+            {{#str}}viewdeck, mod_swipe{{/str}}
+        </a>
+        <a class="m-action btn btn-default mr-2" href="{{{report}}}">
+            <i class="fa fa-fw fa-tasks"></i>
+            {{#str}}viewswipereport, mod_swipe{{/str}}
+        </a>
+    </div>
+
+</div>
+{{#js}}
+require(['jquery', 'mod_swipe/swipe_wrapper'], function($, Swipe) {
+    var root = '#swipe-slider';
+    Swipe.init(root);
+});
+{{/js}}
