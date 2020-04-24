@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * textFit v2.3.1
  * Previously known as jQuery.textFit
@@ -235,3 +236,4 @@
     document.body.appendChild(css);
   }
 }));
+/* eslint-enable */

@@ -62,7 +62,7 @@ function(
         IMAGE: 1,
         VIDEO: 2,
         TEXT: 3
-    }
+    };
 
     var storeLike = function(itemid, like) {
         var args = {
@@ -96,14 +96,14 @@ function(
     var getCardId = function(root) {
         var container = root.find(SELECTORS.ACTION_CONTAINER);
         return container.attr('data-current-card');
-    }
+    };
 
     var getCard = function(root, cardid) {
         if (cardid) {
             var card = root.find('[data-card-id=' + cardid + ']');
             return card;
         }
-    }
+    };
 
     var showCardInfo = function(card) {
         var cardinfo = card.find(SELECTORS.INFO_CONTAINER);
@@ -115,7 +115,7 @@ function(
             cardinfo.css('top', '-420px');
             cardinfo.attr('data-status', 'closed');
         }
-    }
+    };
 
     /**
      * Listen to and handle events for routing, showing and hiding the message drawer.
@@ -141,13 +141,11 @@ function(
         });
 
         root.on(CustomEvents.events.activate, SELECTORS.LIKE, function(e, data) {
-            var element = $(e.target).closest(SELECTORS.LIKE);
             $("#tinderslide").jTinder('like');
             data.originalEvent.preventDefault();
         });
 
         root.on(CustomEvents.events.activate, SELECTORS.DISLIKE, function(e, data) {
-            var element = $(e.target).closest(SELECTORS.DISLIKE);
             $("#tinderslide").jTinder('dislike');
             data.originalEvent.preventDefault();
         });
@@ -166,8 +164,8 @@ function(
             });
 
             data.originalEvent.preventDefault();
-        })
-    }
+        });
+    };
 
     var nextCardActions = function(root, cardid) {
 
@@ -197,21 +195,21 @@ function(
         }
 
         if (preloadid) {
-            preloadCard = getCard(root, preloadid);
+            var preloadCard = getCard(root, preloadid);
 
             // Load card image
             if (preloadCard.attr('data-card-type') == TYPE.IMAGE) {
                 var cardimage = preloadCard.attr('data-card-image');
                 preloadCard.find(SELECTORS.CARD_IMAGE).attr('style', 'background-image: url(' + cardimage + ')');
-            };
+            }
 
             // Load card video
             if (preloadCard.attr('data-card-type') == TYPE.VIDEO) {
                 var video = preloadCard.attr('data-card-video');
                 preloadCard.find(SELECTORS.CARD_VIDEO).attr('src', video);
-            };
+            }
         }
-    }
+    };
 
     /**
      * @method
@@ -222,17 +220,17 @@ function(
         textFit(document.getElementsByClassName('innertext'), {multiLine: true});
         $("#tinderslide").jTinder({
             // dislike callback
-            onDislike: function (item) {
+            onDislike: function () {
                 // set the status text
                 var cardid = getCardId(root);
                 storeLike(cardid, false);
-                nextCardActions(root, cardid)
+                nextCardActions(root, cardid);
             },
             // like callback
-            onLike: function (item) {
+            onLike: function () {
                 var cardid = getCardId(root);
                 storeLike(cardid, true);
-                nextCardActions(root, cardid)
+                nextCardActions(root, cardid);
             },
             animationRevertSpeed: 200,
             animationSpeed: 400,
@@ -241,7 +239,7 @@ function(
             dislikeSelector: '.dislike'
         });
         registerEventListeners(root);
-    }
+    };
 
     return {
         init: init

@@ -7,6 +7,8 @@
  * Licensed under GPL Version 2.
  * https://github.com/do-web/jTinder/blob/master/LICENSE
  */
+
+/* eslint-disable */
 define(["jquery"], // Require jquery
        function($){
 
@@ -187,3 +189,4 @@ define(["jquery"], // Require jquery
 	};
 
 });
+/* eslint-enable */

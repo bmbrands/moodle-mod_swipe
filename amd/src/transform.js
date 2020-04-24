@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
  * transform: A jQuery cssHooks adding cross-browser 2d transform capabilities to $.fn.css() and $.fn.animate()
  *
@@ -16,6 +17,7 @@
  * Send me music http://www.amazon.co.uk/wishlist/HNTU0468LQON
  *
  */
+
 
 define(["jquery"], // Require jquery
 
@@ -550,3 +552,5 @@ function($){
 		centerOrigin: "margin"
 	};
 });
+
+/* eslint-enable */

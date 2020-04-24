@@ -75,13 +75,9 @@ function(
         // Variables for moving cards.
         var cardsContainer = root.find(SELECTORS.WRAPPER);
 
-        var swipeid = cardsContainer.attr('data-swipeid')
+        var swipeid = cardsContainer.attr('data-swipeid');
 
         var cardsSortable = new Sortablelist(cardsContainer, {moveHandlerSelector: '.movecard > [data-drag-type=move]'});
-
-        cardsSortable.getElementName = function(element) {
-            return $.Deferred().resolve(getModuleName(element));
-        };
 
         cardsSortable.getDestinationName = function(parentElement, afterElement) {
             if (!afterElement.length) {
@@ -93,14 +89,11 @@ function(
 
         cardsContainer.on(Sortablelist.EVENTS.DROP, function(e, info) {
             e.stopPropagation();
-            var sectionnumber,
-                args;
+            var args;
             if (info.positionChanged) {
                 if (info.element.attr('data-card-id')) {
                     var cardid = info.element.attr('data-card-id');
-                    console.log(cardid);
                     var cardtarget = info.targetNextElement.attr('data-card-id');
-                    console.log(cardtarget);
                     args = {
                         cardid: cardid,
                         cardtarget: cardtarget,
@@ -112,7 +105,7 @@ function(
                 }
             }
         });
-    }
+    };
 
     /**
      * @method
@@ -121,7 +114,7 @@ function(
     var init = function(root) {
         var root = $(root);
         registerEventListeners(root);
-    }
+    };
 
     return {
         init: init
