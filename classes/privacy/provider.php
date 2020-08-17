@@ -46,8 +46,6 @@ class provider implements
     // This plugin has some sitewide user preferences to export.
     \core_privacy\local\request\user_preference_provider {
 
-    use subcontext_info;
-
     /**
      * Return the fields which contain personal data.
      *
@@ -57,62 +55,26 @@ class provider implements
     public static function get_metadata(collection $items) : collection {
 
         $items->add_database_table(
-            'swipe',
-            [
-                'id' => 'privacy:metadata:swipe:id',
-                'name' => 'privacy:metadata:swipe:name',
-                'userid' => 'privacy:metadata:swipe:userid',
-            ],
-            'privacy:metadata:swipe'
-        );
-
-        $items->add_database_table(
-            'swipe_gallery',
-            [
-                'instanceid' => 'privacy:metadata:swipe_gallery:instanceid',
-                'name' => 'privacy:metadata:swipe_gallery:name',
-                'userid' => 'privacy:metadata:swipe_gallery:userid',
-                'groupid' => 'privacy:metadata:swipe_gallery:groupid',
-            ],
-            'privacy:metadata:swipe_gallery'
-        );
-
-        $items->add_database_table(
-            'swipe_item',
-            [
-                'galleryid' => 'privacy:metadata:swipe_item:galleryid',
-                'userid' => 'privacy:metadata:swipe_item:userid',
-                'caption' => 'privacy:metadata:swipe_item:caption',
-                'description' => 'privacy:metadata:swipe_item:description',
-                'moralrights' => 'privacy:metadata:swipe_item:moralrights',
-                'originalauthor' => 'privacy:metadata:swipe_item:originalauthor',
-                'productiondate' => 'privacy:metadata:swipe_item:productiondate',
-                'medium' => 'privacy:metadata:swipe_item:medium',
-                'publisher' => 'privacy:metadata:swipe_item:publisher',
-                'broadcaster' => 'privacy:metadata:swipe_item:broadcaster',
-                'reference' => 'privacy:metadata:swipe_item:reference',
-                'externalurl' => 'privacy:metadata:swipe_item:externalurl',
-                'timecreated' => 'privacy:metadata:swipe_item:timecreated',
-            ],
-            'privacy:metadata:swipe_item'
-        );
-
-        $items->add_database_table(
             'swipe_userfeedback',
             [
-                'itemid' => 'privacy:metadata:swipe_userfeedback:itemid',
+                'cardid' => 'privacy:metadata:swipe_userfeedback:cardid',
                 'userid' => 'privacy:metadata:swipe_userfeedback:userid',
                 'liked' => 'privacy:metadata:swipe_userfeedback:liked',
-                'rating' => 'privacy:metadata:swipe_userfeedback:rating',
+                'rating' => 'privacy:metadata:swipe_userfeedback:rating'
             ],
             'privacy:metadata:swipe_userfeedback'
         );
 
-        $items->add_subsystem_link('core_files', [], 'privacy:metadata:core_files');
-        $items->add_subsystem_link('core_comment', [], 'privacy:metadata:core_comments');
-        $items->add_subsystem_link('core_tag', [], 'privacy:metadata:core_tag');
-
-        $items->add_user_preference('mod_swipe_mediasize', 'privacy:metadata:preference:mediasize');
+        $items->add_database_table(
+            'swipe_swipefeedback',
+            [
+                'userid' => 'privacy:metadata:swipe_swipefeedback:userid',
+                'swipeid' => 'privacy:metadata:swipe_swipefeedback:swipeid',
+                'feedback' => 'privacy:metadata:swipe_swipefeedback:feedback',
+                'timecreated' => 'privacy:metadata:swipe_swipefeedback:timecreated'
+            ],
+            'privacy:metadata:swipe_swipefeedback'
+        );
 
         return $items;
     }
@@ -223,7 +185,7 @@ class provider implements
         $params = ['userid1' => $userid, 'userid2' => $userid, 'userid3' => $userid] + $collparams;
         $galleries = $DB->get_recordset_sql($sql, $params);
 
-        foreach($galleries as $gallery) {
+        foreach ($galleries as $gallery) {
             $context = \context::instance_by_id($mappings[$gallery->instanceid]);
 
             $gallerydata = (object) [
@@ -388,9 +350,9 @@ class provider implements
         $itemidsql = "SELECT i.id
                       FROM {swipe_item} i
                       WHERE userid = :userid AND galleryid IN (
-                        SELECT id
-                        FROM {swipe_gallery} 
-                        WHERE instanceid = :instanceid
+                      SELECT id
+                      FROM {swipe_gallery}
+                      WHERE instanceid = :instanceid
                       )";
         foreach ($contextlist->get_contexts() as $context) {
             if (!$context instanceof \context_module) {
@@ -428,9 +390,9 @@ class provider implements
         $pref = get_user_preferences('mod_swipe_mediasize', \mod_swipe\output\gallery\renderable::MEDIASIZE_MD, $userid);
         $string = 'mediasizemd';
         if ($pref == \mod_swipe\output\gallery\renderable::MEDIASIZE_SM) {
-          $string = 'mediasizesm';
+            $string = 'mediasizesm';
         } else if ($pref == \mod_swipe\output\gallery\renderable::MEDIASIZE_LG) {
-          $string = 'mediasizelg';
+            $string = 'mediasizelg';
         }
         writer::export_user_preference('mod_swipe', 'mod_swipe_mediasize', $pref, get_string($string, 'mod_swipe'));
     }

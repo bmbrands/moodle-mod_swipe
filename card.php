@@ -44,8 +44,7 @@ if ($i) {
     $card = new \mod_swipe\card($i);
     if ($action == 'delete') {
         $card->delete();
-        echo '<pre>' . print_r($card, true) . '</pre>';
-        redirect(new moodle_url('/mod/swipe/view.php',['id' => $cm->id, 'editing' => 1]));
+        redirect(new moodle_url('/mod/swipe/view.php', ['id' => $cm->id, 'editing' => 1]));
     }
 } else {
     $card = false;

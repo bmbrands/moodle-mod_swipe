@@ -176,13 +176,12 @@ class mod_swipe_external extends external_api {
         );
     }
 
-        /**
+    /**
      * Returns description of method parameters
      *
      * @return external_function_parameters
      * @since Moodle 3.6
      */
-
     public static function movecard_parameters() {
         return new external_function_parameters([
             'cardid' => new external_value(PARAM_INT, 'Card ID', VALUE_DEFAULT, 0),

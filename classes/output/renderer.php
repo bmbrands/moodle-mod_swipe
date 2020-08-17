@@ -53,17 +53,17 @@ class renderer extends plugin_renderer_base {
         return $mediarenderer->embed_url(new moodle_url($card->get_embed_url()), '', 670, 377);
     }
 
-	/**
-	 * Render a carousel of cards.
+    /**
+     * Render a carousel of cards.
      *
      * @param Object $swipedeck
      * @return string Rendered HTML.
      */
     public function view_cards($swipedeck) {
 
-    	$cm = $swipedeck->cm;
+        $cm = $swipedeck->cm;
         $template = new stdClass();
-        // change to true to show card name and nr. of likes.
+        // Change to true to show card name and nr. of likes.
         $template->showcardfooter = false;
         $template->cancomment = true;
         $template->modurl = new moodle_url('/mod/swipe/img/');
@@ -106,19 +106,19 @@ class renderer extends plugin_renderer_base {
             }
 
             if (count($previous) >= 2) {
-                $card->preloadid = $previous[count($previous)-2];
+                $card->preloadid = $previous[count($previous) - 2];
             }
 
-            if ($card->record->itemtype == 1) { // Image
+            if ($card->record->itemtype == 1) { // Image.
                 $card->isimage = true;
                 $card->img = $card->get_image_url();
                 $card->caption = $card->record->caption;
                 $card->itemhtml = $this->embed_html($card);
-            } else if ($card->record->itemtype == 2) { // Video
+            } else if ($card->record->itemtype == 2) { // Video.
                 $card->isvideo = true;
                 $card->caption = $card->record->caption;
                 $card->embed = $card->get_embed_url();
-            } else { // TEXT
+            } else { // Text.
                 $card->type = 3;
                 $card->istext = true;
                 $card->text = $card->record->description;
@@ -137,11 +137,12 @@ class renderer extends plugin_renderer_base {
             $template->hascards = true;
             $template->cards[($count - 2)]->preload = true;
             $template->cards[($count - 1)]->preload = true;
-        } else if ($count == 2){
+        } else if ($count == 2) {
             $template->hascards = true;
             $template->cards[0]->preload = true;
             $template->cards[1]->preload = true;
         }
+
         if ($count > 0) {
             $template->cards[0]->last = true;
         }
@@ -157,9 +158,9 @@ class renderer extends plugin_renderer_base {
      */
     public function edit_cards($swipedeck) {
 
-    	$cm = $swipedeck->cm;
+        $cm = $swipedeck->cm;
 
-    	$template = new stdClass();
+        $template = new stdClass();
 
         $template->swipeid = $cm->instance;
 
@@ -169,7 +170,7 @@ class renderer extends plugin_renderer_base {
 
         foreach ($cards as $card) {
             $card->id = $card->record->id;
-            if ($card->record->itemtype == 1) { // Image
+            if ($card->record->itemtype == 1) { // Image.
                 $card->isimage = true;
                 $card->img = $card->get_image_url();
                 $card->caption = $card->record->caption;
@@ -178,7 +179,7 @@ class renderer extends plugin_renderer_base {
                 $card->isvideo = true;
                 $card->caption = $card->record->caption;
                 $card->embed = $card->get_embed_url();
-            } else { // TEXT
+            } else { // Text.
                 $card->type = 3;
                 $card->istext = true;
                 $card->text = $card->record->description;
@@ -191,7 +192,7 @@ class renderer extends plugin_renderer_base {
             $template->cards[] = $card;
         }
 
-    	return $this->render_from_template('mod_swipe/edit', $template);
+        return $this->render_from_template('mod_swipe/edit', $template);
     }
 
     /**
@@ -247,7 +248,7 @@ class renderer extends plugin_renderer_base {
                 $template->desc = true;
                 $sortparams['sort'] = 'likeasc';
                 break;
-            }
+        }
 
         $lsort = $sortparams;
         $lsort['sort'] = 'carddesc';
@@ -302,7 +303,7 @@ class renderer extends plugin_renderer_base {
         if (!empty($cardlist)) {
             switch ($sort) {
                 case 'cardsasc':
-                    //do nothing
+                    // Do nothing.
                     break;
                 case 'carddesc':
                     $cardlist = array_reverse($cardlist);
@@ -342,11 +343,11 @@ class renderer extends plugin_renderer_base {
         $cards = $swipedeck->getcards();
 
         $downloadfilename = $swipedeck->name . '.xls';
-        // Creating a workbook
+        // Creating a workbook.
         $workbook = new \MoodleExcelWorkbook("-");
-        // Sending HTTP headers
+        // Sending HTTP headers.
         $workbook->send($downloadfilename);
-        // Adding the worksheet
+        // Adding the worksheet.
         $myxls = $workbook->add_worksheet('cards');
 
         // Create xls header.
@@ -364,7 +365,7 @@ class renderer extends plugin_renderer_base {
         // Add cards to xls.
         foreach ($cards as $card) {
 
-            if ($card->record->itemtype == 1) { // Image
+            if ($card->record->itemtype == 1) { // Image.
                 $file = $card->get_stored_file();
                 $filename = $file->get_filename();
                 $myxls->write_string($row, 0, strip_tags($card->record->caption) . "( $filename )",
@@ -375,13 +376,13 @@ class renderer extends plugin_renderer_base {
                 $myxls->write_string($row, 0, $videoname,
                     array('text_wrap' => true, 'v_align' => 'top'));
                 $myxls->set_row($row, 80);
-            } else { // TEXT
+            } else { // Text.
                 $myxls->write_string($row, 0, strip_tags($card->record->description),
                     array('bold' => 1, 'size' => 15, 'text_wrap' => true, 'v_align' => 'top'));
                 $myxls->set_row($row, 80);
             }
 
-            // Write the likes
+            // Write the likes.
             $like = $card->get_like_info();
             $myxls->write_string($row, 1, $like->dislikes,
                 array('v_align' => 'top', 'color' => '#EB6E5A', 'size' => 15));
@@ -405,7 +406,7 @@ class renderer extends plugin_renderer_base {
             $row++;
         }
 
-        /// Close the workbook
+        // Close the workbook.
         $workbook->close();
         exit;
     }

@@ -125,7 +125,7 @@ function swipe_delete_instance($id) {
         return false;
     }
 
-    // TODO
+    // Todo.
     $collection = new \mod_swipe\collection($swipe);
     $collection->delete();
 

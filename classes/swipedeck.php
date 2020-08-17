@@ -208,7 +208,7 @@ class swipedeck  {
         if (count($comments)) {
             foreach ($comments as &$comment) {
                 $comment->name = fullname($comment);
-                $comment->avatar = $OUTPUT->user_picture($comment, array('size'=>18));
+                $comment->avatar = $OUTPUT->user_picture($comment, array('size' => 18));
             }
         }
         return array_values($comments);

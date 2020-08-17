@@ -56,7 +56,6 @@ class card {
         $data->timecreated = time();
         $maxorder = $DB->get_fieldset_sql('SELECT max(sortorder) FROM {swipe_item} WHERE swipeid = ?', [$data->swipeid]);
 
-        echo 'hello' . print_r($maxorder[0], true);
         $data->sortorder = $maxorder[0] + 1;
         $data->id = $DB->insert_record('swipe_item', $data);
         if (!isset($data->externalurl)) {
@@ -137,7 +136,7 @@ class card {
 
     /**
      * Get this swipedeck context id.
-     *s
+     *
      * @return Object swipe deck module context
      */
     public function get_context() {
@@ -201,7 +200,8 @@ class card {
             return null;
         }
 
-        $path = \moodle_url::make_pluginfile_url($this->get_context()->id, 'mod_swipe', 'card', $this->record->id, '/', $file->get_filename());
+        $path = \moodle_url::make_pluginfile_url($this->get_context()->id,
+            'mod_swipe', 'card', $this->record->id, '/', $file->get_filename());
 
         return $path;
     }
@@ -242,7 +242,7 @@ class card {
                 }
             } else {
                 if (isset($_COOKIE['rated'])) {
-                    // we add all rated cards to disliked cards. It does not matter
+                    // We add all rated cards to disliked cards. It does not matter
                     // if they were liked or disliked. As long as they are skipped in the deck.
                     $SESSION->dislikedcards = $_COOKIE['rated'];
                     $dislikedcards = json_decode($_COOKIE['rated']);
@@ -378,7 +378,7 @@ class card {
             }
             $dislikedcards[] = $this->record->id;
             $cookievalue = json_encode($dislikedcards);
-            $SESSION->dislikedcards =  $cookievalue;
+            $SESSION->dislikedcards = $cookievalue;
 
             $fb = (object) array(
                 'cardid' => $this->record->id,

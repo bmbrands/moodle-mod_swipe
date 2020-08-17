@@ -39,7 +39,7 @@ $context = context_module::instance($cm->id);
 
 $swipedeck = new \mod_swipe\swipedeck($cm, $context);
 
-$pageurl = new moodle_url('/mod/swipe/swipe.php', array('id' => $cm->instance, 'page' => 0));
+$pageurl = new moodle_url('/mod/swipe/view.php', array('id' => $id, 'page' => 0));
 $PAGE->set_cm($cm, $course);
 $PAGE->set_url($pageurl);
 require_login($course, true, $cm);
@@ -54,11 +54,11 @@ if ($page === 'exportxls') {
 echo $OUTPUT->header(null, true);
 
 if ($editing) {
-	echo $renderer->edit_cards($swipedeck);
+    echo $renderer->edit_cards($swipedeck);
 } else if ($page === 'report') {
-	echo $renderer->view_cards_report($swipedeck);
+    echo $renderer->view_cards_report($swipedeck);
 } else {
-	echo $renderer->view_cards($swipedeck);
+    echo $renderer->view_cards($swipedeck);
 }
 
 echo $OUTPUT->footer();

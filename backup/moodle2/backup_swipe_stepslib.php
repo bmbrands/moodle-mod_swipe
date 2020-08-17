@@ -52,12 +52,11 @@ class backup_swipe_activity_structure_step extends backup_activity_structure_ste
 
         $items = new backup_nested_element('items');
         $item = new backup_nested_element('item', array('id'), array(
-            'swipeid','caption', 'description', 'sortorder', 'externalurl',
+            'swipeid', 'caption', 'description', 'sortorder', 'externalurl',
             'itemtype', 'timecreated'
         ));
 
         // Build the tree.
-
         $swipe->add_child($items);
         $items->add_child($item);
 
@@ -66,7 +65,6 @@ class backup_swipe_activity_structure_step extends backup_activity_structure_ste
 
         $swipe->add_child($swipefeedbacks);
         $swipefeedbacks->add_child($swipefeedback);
-
 
         // Define sources.
         $swipe->set_source_table('swipe', array('id' => backup::VAR_ACTIVITYID));

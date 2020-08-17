@@ -48,7 +48,7 @@ class mod_swipe_card_form extends moodleform {
         $swipedeck = $this->_customdata['swipedeck'];
         $card = $this->_customdata['card'];
 
-        $cardid = $card ? $card->record->id : 0 ;
+        $cardid = $card ? $card->record->id : 0;
 
         $mform->addElement('hidden', 'cardid', $cardid);
         $mform->setType('cardid', PARAM_INT);

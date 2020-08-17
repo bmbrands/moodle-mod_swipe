@@ -58,7 +58,6 @@ class mod_swipe_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements(get_string('chatintro', 'chat'));
 
-
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();
