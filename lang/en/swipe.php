@@ -74,4 +74,4 @@ $string['privacy:metadata:swipe_userfeedback'] = 'User feedback';
 $string['privacy:metadata:swipe_swipefeedback:userid'] = 'User id';
 $string['privacy:metadata:swipe_swipefeedback:swipeid'] = 'Swipe id';
 $string['privacy:metadata:swipe_swipefeedback:feedback'] = 'Feedback';
-$string['privacy:metadata:swipe_swipefeedback:timecreated' = 'Time created';
+$string['privacy:metadata:swipe_swipefeedback:timecreated'] = 'Time created';

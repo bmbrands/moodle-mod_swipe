@@ -34,5 +34,18 @@ function xmldb_swipe_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
+    if ($oldversion < 2019071902) {
+
+        // Rename field swipeid on table swipe_userfeedback to NEWNAMEGOESHERE.
+        $table = new xmldb_table('swipe_userfeedback');
+        $field = new xmldb_field('rating', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'liked');
+
+        // Launch rename field swipeid.
+        $dbman->rename_field($table, $field, 'swipeid');
+
+        // Swipe savepoint reached.
+        upgrade_mod_savepoint(true, 2019071902, 'swipe');
+    }
+
     return true;
 }

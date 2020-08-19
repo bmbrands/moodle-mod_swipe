@@ -42,7 +42,7 @@ class backup_swipe_activity_structure_step extends backup_activity_structure_ste
 
         $userfeedbacks = new backup_nested_element('userfeedback');
         $userfeedback = new backup_nested_element('ufeedback', array('id'), array(
-            'cardid', 'userid', 'liked', 'rating'
+            'cardid', 'userid', 'liked', 'swipeid'
         ));
 
         $swipefeedbacks = new backup_nested_element('swipefeedback');

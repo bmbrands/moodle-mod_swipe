@@ -25,10 +25,12 @@ namespace mod_swipe\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\deletion_criteria;
 use core_privacy\local\request\helper;
 use core_privacy\local\request\transform;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
@@ -43,8 +45,8 @@ class provider implements
     \core_privacy\local\metadata\provider,
     // This plugin is a core_user_data_provider.
     \core_privacy\local\request\plugin\provider,
-    // This plugin has some sitewide user preferences to export.
-    \core_privacy\local\request\user_preference_provider {
+
+    \core_privacy\local\request\core_userlist_provider {
 
     /**
      * Return the fields which contain personal data.
@@ -60,7 +62,7 @@ class provider implements
                 'cardid' => 'privacy:metadata:swipe_userfeedback:cardid',
                 'userid' => 'privacy:metadata:swipe_userfeedback:userid',
                 'liked' => 'privacy:metadata:swipe_userfeedback:liked',
-                'rating' => 'privacy:metadata:swipe_userfeedback:rating'
+                'swipeid' => 'privacy:metadata:swipe_userfeedback:swipeid'
             ],
             'privacy:metadata:swipe_userfeedback'
         );
@@ -87,28 +89,72 @@ class provider implements
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
         // Fetch all swipe comments.
-        $sql = "SELECT c.id
-                FROM {context} c
-                JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
-                JOIN {modules} m ON m.id = cm.module AND m.name = 'swipe'
-                JOIN {swipe} mg ON mg.id = cm.instance
-                LEFT JOIN {swipe_gallery} mgg ON mgg.instanceid = mg.id
-                LEFT JOIN {swipe_item} mgi ON mgi.galleryid = mgg.id
-                LEFT JOIN {swipe_userfeedback} mgu ON mgu.itemid = mgi.id
-                LEFT JOIN {comments} comg ON comg.commentarea = 'gallery' AND comg.itemid = mgg.id
-                LEFT JOIN {comments} comi ON comi.commentarea = 'item' AND comi.itemid = mgi.id
-                WHERE mgg.userid = :userid1 OR mgi.userid = :userid2 OR mgu.userid = :userid3";
+
+        $sql = "
+            SELECT DISTINCT ctx.id
+              FROM {swipe} s
+              JOIN {modules} m
+                ON m.name = :swipe
+              JOIN {course_modules} cm
+                ON cm.instance = s.id
+               AND cm.module = m.id
+              JOIN {context} ctx
+                ON ctx.instanceid = cm.id
+               AND ctx.contextlevel = :modulelevel
+         LEFT JOIN {swipe_item} swi
+                ON swi.swipeid = s.id
+         LEFT JOIN {swipe_userfeedback} swu
+                ON swu.cardid = swi.id
+               AND swu.userid = :userid1
+         LEFT JOIN {swipe_swipefeedback} swf
+                ON swf.swipeid = s.id
+               AND swf.userid = :userid2
+             WHERE swi.id IS NOT NULL
+                OR swu.id IS NOT NULL
+                OR swf.id IS NOT NULL";
 
         $params = [
-            'contextlevel' => CONTEXT_MODULE,
+            'swipe' => 'swipe',
+            'modulelevel' => CONTEXT_MODULE,
             'userid1'      => $userid,
-            'userid2'      => $userid,
-            'userid3'      => $userid,
+            'userid2'      => $userid
         ];
         $contextlist = new contextlist();
         $contextlist->add_from_sql($sql, $params);
 
         return $contextlist;
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     *
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+
+        $params = [
+            'modulename' => 'swipe',
+            'modulelevel' => CONTEXT_MODULE,
+            'instanceid'    => $context->instanceid,
+        ];
+
+        $sql = "SELECT d.userid
+              FROM {course_modules} cm
+              JOIN {modules} m ON m.id = cm.module AND m.name = :modulename
+              JOIN {swipe} s ON s.id = cm.instance
+              JOIN {swipe_item} swi
+                ON swi.swipeid = s.id
+         LEFT JOIN {swipe_userfeedback} swu
+                ON swu.cardid = swi.id
+             WHERE cm.id = :instanceid";
+
+        $userlist->add_from_sql('userid', $sql, $params);
     }
 
     /**
@@ -127,163 +173,70 @@ class provider implements
 
         list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
-        $sql = "SELECT c.id AS contextid,
-                       mg.id,
-                       cm.id AS cmid
-                FROM {context} c
-                JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
-                JOIN {modules} m ON m.id = cm.module AND m.name = 'swipe'
-                JOIN {swipe} mg ON mg.id = cm.instance
-                JOIN {swipe_gallery} g ON g.instanceid = mg.id
-                LEFT JOIN {swipe_item} i ON i.galleryid = g.id
-                LEFT JOIN {swipe_userfeedback} u ON u.itemid = i.id AND u.userid = :userid1
-                WHERE c.id {$contextsql} AND (
-                    g.userid = :userid2 OR i.userid = :userid3 OR u.id IS NOT NULL
-                )
-                GROUP BY c.id, mg.id, cm.id";
+        $sql = "SELECT cm.id AS cmid,
+                       swu.liked as liked,
+                       swi.caption,
+                       swf.feedback
+                  FROM {context} c
+            INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+            INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+            INNER JOIN {swipe} sw ON sw.id = cm.instance
+            INNER JOIN {swipe_item} swi ON swi.swipeid = sw.id
+            INNER JOIN {swipe_userfeedback} swu ON swu.cardid = swi.id
+            INNER JOIN {swipe_swipefeedback} swf ON swf.swipeid = sw.id
+                 WHERE c.id {$contextsql}
+                       AND swu.userid = :userid
+                       AND swf.userid = :userid2
+              ORDER BY cm.id";
 
-        $params = [
-            'userid1' => $user->id,
-            'userid2' => $user->id,
-            'userid3' => $user->id,
-            'contextlevel' => CONTEXT_MODULE
-        ] + $contextparams;
-        $collections = $DB->get_recordset_sql($sql, $params);
+        $params = ['modname' => 'swipe', 'contextlevel' => CONTEXT_MODULE,
+            'userid' => $user->id, 'userid2' => $user->id] + $contextparams;
 
-        $mappings = [];
-
-        foreach ($collections as $collection) {
-            $mappings[$collection->id] = $collection->contextid;
-            $context = \context_module::instance($collection->cmid);
-
-            $data = helper::get_context_data($context, $user);
-            writer::with_context($context)->export_data([], $data);
-            helper::export_context_files($context, $user);
+        $lastcmid = null;
+        $userfeedback = $DB->get_recordset_sql($sql, $params);
+        $index = 0;
+        foreach ($userfeedback as $feedback) {
+            // If we've moved to a new choice, then write the last choice data and reinit the choice data array.
+            if ($lastcmid != $feedback->cmid) {
+                if (!empty($feedbackdata)) {
+                    $context = \context_module::instance($lastcmid);
+                    self::export_feedback_data_for_user($feedbackdata, $context, $user);
+                }
+                $feedbackdata = [
+                    'liked' => [],
+                    'feedback' => $feedback->feedback
+                ];
+            }
+            $index++;
+            $feedbackdata['liked'][$index . ' ' . $feedback->caption] = $feedback->liked;
+            $lastcmid = $feedback->cmid;
         }
-        $collections->close();
+        $userfeedback->close();
 
-        if (!empty($mappings)) {
-            static::export_gallery_data($user->id, $mappings);
-            static::export_all_items($user->id, $mappings);
-        }
-    }
-
-    protected static function export_gallery_data(int $userid, array $mappings) {
-        global $DB;
-        // Find all galleries the user owns, or has added items to.
-        list($collinsql, $collparams) = $DB->get_in_or_equal(array_keys($mappings), SQL_PARAMS_NAMED);
-
-        $sql = "SELECT g.*
-                FROM {swipe} m
-                JOIN {swipe_gallery} g ON g.instanceid = m.id
-                LEFT JOIN {swipe_item} i ON i.galleryid = g.id
-                LEFT JOIN {swipe_userfeedback} u ON u.itemid = i.id AND u.userid = :userid1
-                WHERE m.id {$collinsql} AND (
-                    g.userid = :userid2 OR i.userid = :userid3 OR u.id IS NOT NULL
-                )";
-
-        $params = ['userid1' => $userid, 'userid2' => $userid, 'userid3' => $userid] + $collparams;
-        $galleries = $DB->get_recordset_sql($sql, $params);
-
-        foreach ($galleries as $gallery) {
-            $context = \context::instance_by_id($mappings[$gallery->instanceid]);
-
-            $gallerydata = (object) [
-                'name' => format_string($gallery->name, true),
-                'creator_was_you' => transform::yesno($gallery->userid == $userid),
-            ];
-
-            $galleryarea = static::get_gallery_area($gallery);
-            writer::with_context($context)
-                ->export_data($galleryarea, $gallerydata);
-
-            \core_tag\privacy\provider::export_item_tags($userid, $context, $galleryarea, 'mod_swipe', 'gallery', $gallery->id);
-        }
-        $galleries->close();
-    }
-
-    protected static function export_all_items(int $userid, array $mappings) {
-        global $DB;
-        // Find all galleries the user owns, or has added items to.
-        list($collinsql, $collparams) = $DB->get_in_or_equal(array_keys($mappings), SQL_PARAMS_NAMED);
-
-        $sql = "SELECT g.id AS id,
-                       m.id AS swipeid,
-                       g.name
-                FROM {swipe} m
-                JOIN {swipe_gallery} g ON g.instanceid = m.id
-                LEFT JOIN {swipe_item} i ON i.galleryid = g.id
-                LEFT JOIN {swipe_userfeedback} u ON u.itemid = i.id AND u.userid = :userid1
-                WHERE m.id {$collinsql} AND (
-                    g.userid = :userid2 OR i.userid = :userid3 OR u.id IS NOT NULL
-                )
-                GROUP BY m.id, g.id, g.name";
-        $params = ['userid1' => $userid, 'userid2' => $userid, 'userid3' => $userid] + $collparams;
-        $galleries = $DB->get_records_sql($sql, $params);
-        foreach ($galleries as $gallery) {
-            $context = \context::instance_by_id($mappings[$gallery->swipeid]);
-            static::export_all_items_in_gallery($userid, $context, $gallery);
+        // The data for the last activity won't have been written yet, so make sure to write it now!
+        if (!empty($feedbackdata)) {
+            $context = \context_module::instance($lastcmid);
+            self::export_feedback_data_for_user($feedbackdata, $context, $user);
         }
     }
 
     /**
-     * Store all information about all item that we have detected this user to has uploaded or provided feedback to.
+     * Export the supplied personal data for a single choice activity, along with any generic data or area files.
      *
-     * @param   int         $userid The userid of the user whose data is to be exported.
-     * @param   \context    $context The instance of the swipe context.
-     * @param   \stdClass   $discussion The gallery whose data is being exported.
+     * @param array $feedbackdata the personal data to export for the choice.
+     * @param \context_module $context the context of the choice.
+     * @param \stdClass $user the user record
      */
-    protected static function export_all_items_in_gallery($userid, $context, $gallery) {
-        global $DB;
-        $sql = "SELECT i.*
-                FROM {swipe_gallery} g
-                JOIN {swipe_item} i ON i.galleryid = g.id
-                LEFT JOIN {swipe_userfeedback} u ON u.itemid = i.id AND u.userid = :userid1
-                WHERE g.id = :galleryid AND (
-                    i.userid = :userid2 OR u.id IS NOT NULL
-                )";
-        $params = [
-          'galleryid' => $gallery->id,
-          'userid1' => $userid,
-          'userid2' => $userid,
-        ];
-        $items = $DB->get_records_sql($sql, $params);
+    protected static function export_feedback_data_for_user(array $feedbackdata, \context_module $context, \stdClass $user) {
+        // Fetch the generic module data for the choice.
+        $contextdata = helper::get_context_data($context, $user);
 
-        $galleryarea = static::get_gallery_area($gallery);
-        $itemdata = [];
-        foreach ($items as $item) {
-            $itemdata[] = static::export_item_data($userid, $context, $galleryarea, $item);
-        }
+        // Merge with choice data and write it.
+        $contextdata = (object)array_merge((array)$contextdata, $feedbackdata);
+        writer::with_context($context)->export_data([], $contextdata);
 
-        $itemarea = array_merge($galleryarea, static::get_item_area());
-        writer::with_context($context)
-            ->export_data($itemarea, (object)$itemdata);
-    }
-
-    /**
-     * Export all data in the item.
-     *
-     * @param   int         $userid The userid of the user whose data is to be exported.
-     * @param   \context    $context The instance of the forum context.
-     * @param   array       $galleryarea The subcontext of the gallery.
-     * @param   \stdClass   $item The post structure and all of its children
-     */
-    protected static function export_item_data(int $userid, \context $context, $galleryarea, $item) {
-        $itemdata = (object) [
-            'id' => $item->id,
-            'caption' => format_string($item->caption, true),
-            'timecreated' => transform::datetime($item->timecreated),
-            'creator_was_you' => transform::yesno($item->userid == $userid),
-        ];
-
-        $itemarea = array_merge($galleryarea, static::get_item_area());
-        writer::with_context($context)
-            ->export_area_files($itemarea, 'mod_swipe', 'item', $item->id)
-            ->export_area_files($itemarea, 'mod_swipe', 'lowres', $item->id)
-            ->export_area_files($itemarea, 'mod_swipe', 'thumbnail', $item->id);
-
-        \core_tag\privacy\provider::export_item_tags($userid, $context, $itemarea, 'mod_swipe', 'item', $item->id);
-        return $itemdata;
+        // Write generic module intro files.
+        helper::export_context_files($context, $user);
     }
 
     /**
@@ -298,35 +251,10 @@ class provider implements
             return;
         }
 
-        $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-
-        $DB->delete_records_select('swipe_userfeedback',
-            "itemid IN (
-                SELECT i.id
-                FROM {swipe_item} i
-                JOIN {swipe_gallery} g ON i.galleryid = g.id
-                WHERE g.instanceid = :instanceid
-            )", ['instanceid' => $instanceid]);
-
-        $DB->delete_records_select('swipe_item',
-            "galleryid IN (
-                SELECT id
-                FROM {swipe_gallery} g
-                WHERE g.instanceid = :instanceid
-            )", ['instanceid' => $instanceid]);
-
-        $DB->delete_records('swipe_gallery', ['instanceid' => $instanceid]);
-
-        $fs = get_file_storage();
-        $fs->delete_area_files($context->id, 'mod_swipe', 'item');
-        $fs->delete_area_files($context->id, 'mod_swipe', 'lowres');
-        $fs->delete_area_files($context->id, 'mod_swipe', 'thumbnail');
-
-        \core_comment\privacy\provider::delete_comments_for_all_users($context, 'mod_swipe', 'gallery');
-        \core_comment\privacy\provider::delete_comments_for_all_users($context, 'mod_swipe', 'item');
-
-        \core_tag\privacy\provider::delete_item_tags($context, 'mod_swipe', 'swipe_gallery');
-        \core_tag\privacy\provider::delete_item_tags($context, 'mod_swipe', 'swipe_item');
+        if ($cm = get_coursemodule_from_id('swipe', $context->instanceid)) {
+            $DB->delete_records('swipe_userfeedback', ['swipeid' => $cm->instance]);
+            $DB->delete_records('swipe_swipefeedback', ['swipeid' => $cm->instance]);
+        }
     }
 
     /**
@@ -342,58 +270,47 @@ class provider implements
         }
 
         $userid = $contextlist->get_user()->id;
-        $fs = get_file_storage();
-
-        $galleryidsql = "SELECT g.id
-                         FROM {swipe_gallery} g
-                         WHERE userid = :userid AND instanceid = :instanceid";
-        $itemidsql = "SELECT i.id
-                      FROM {swipe_item} i
-                      WHERE userid = :userid AND galleryid IN (
-                      SELECT id
-                      FROM {swipe_gallery}
-                      WHERE instanceid = :instanceid
-                      )";
         foreach ($contextlist->get_contexts() as $context) {
+
             if (!$context instanceof \context_module) {
                 continue;
             }
-            $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-
-            $params = [
-                'userid' => $userid,
-                'instanceid' => $instanceid,
-            ];
-
-            $fs->delete_area_files_select($context->id, 'mod_swipe', 'item', "IN ($itemidsql)", $params);
-            $fs->delete_area_files_select($context->id, 'mod_swipe', 'lowres', "IN ($itemidsql)", $params);
-            $fs->delete_area_files_select($context->id, 'mod_swipe', 'thumbnail', "IN ($itemidsql)", $params);
-
-            \core_tag\privacy\provider::delete_item_tags_select($context, 'mod_swipe', 'gallery',
-                "IN ($galleryidsql)", $params);
-            \core_tag\privacy\provider::delete_item_tags_select($context, 'mod_swipe', 'item',
-                "IN ($itemidsql)", $params);
-
-            // We delete these last as the deletes above depend on these records.
-
-            $DB->delete_records_select('swipe_userfeedback', "itemid IN ($itemidsql)", $params);
-            $DB->delete_records_select('swipe_item', "galleryid IN ($galleryidsql)", $params);
-            $DB->delete_records('swipe_gallery', $params);
+            $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid]);
+            if (!$instanceid) {
+                continue;
+            }
+            $DB->delete_records('swipe_userfeedback', ['swipeid' => $instanceid, 'userid' => $userid]);
+            $DB->delete_records('swipe_swipefeedback', ['swipeid' => $instanceid, 'userid' => $userid]);
         }
-
-        \core_comment\privacy\provider::delete_comments_for_user($contextlist, 'mod_swipe', 'gallery');
-        \core_comment\privacy\provider::delete_comments_for_user($contextlist, 'mod_swipe', 'item');
-
     }
 
-    public static function export_user_preferences(int $userid) {
-        $pref = get_user_preferences('mod_swipe_mediasize', \mod_swipe\output\gallery\renderable::MEDIASIZE_MD, $userid);
-        $string = 'mediasizemd';
-        if ($pref == \mod_swipe\output\gallery\renderable::MEDIASIZE_SM) {
-            $string = 'mediasizesm';
-        } else if ($pref == \mod_swipe\output\gallery\renderable::MEDIASIZE_LG) {
-            $string = 'mediasizelg';
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist       $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        $context = $userlist->get_context();
+
+        if (!$context instanceof \context_module) {
+            return;
         }
-        writer::export_user_preference('mod_swipe', 'mod_swipe_mediasize', $pref, get_string($string, 'mod_swipe'));
+
+        $cm = get_coursemodule_from_id('swipe', $context->instanceid);
+
+        if (!$cm) {
+            // Only choice module will be handled.
+            return;
+        }
+
+        $userids = $userlist->get_userids();
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+
+        $select = "swipeid = :swipeid AND userid $usersql";
+        $params = ['swipeid' => $cm->instance] + $userparams;
+        $DB->delete_records_select('swipe_userfeedback', $select, $params);
+        $DB->delete_records_select('swipe_swipefeedback', $select, $params);
     }
 }

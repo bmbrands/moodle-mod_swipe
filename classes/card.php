@@ -331,6 +331,7 @@ class card {
                 'cardid' => $this->record->id,
                 'userid' => $USER->id,
                 'liked' => 1,
+                'swipeid' => $this->record->swipeid
             );
             $DB->insert_record('swipe_userfeedback', $fb);
 
@@ -345,6 +346,7 @@ class card {
                     'cardid' => $this->record->id,
                     'userid' => $USER->id,
                     'liked' => 1,
+                    'swipeid' => $this->record->swipeid
                 );
                 $DB->insert_record('swipe_userfeedback', $fb);
             }
@@ -384,6 +386,7 @@ class card {
                 'cardid' => $this->record->id,
                 'userid' => $USER->id,
                 'liked' => 0,
+                'swipeid' => $this->record->swipeid
             );
             $DB->insert_record('swipe_userfeedback', $fb);
             $this->store_cookie_rated($this->record->id);
@@ -396,6 +399,7 @@ class card {
                     'cardid' => $this->record->id,
                     'userid' => $USER->id,
                     'liked' => 0,
+                    'swipeid' => $this->record->swipeid
                 );
                 $DB->insert_record('swipe_userfeedback', $fb);
             }

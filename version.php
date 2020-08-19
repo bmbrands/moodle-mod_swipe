@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019071901;
+$plugin->version   = 2019071902;
 $plugin->requires  = 2018050800;
 $plugin->cron      = 0;
 $plugin->component = 'mod_swipe';

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/swipe/db" VERSION="20190605" COMMENT="XMLDB file for Moodle mod/swipe"
+<XMLDB PATH="mod/swipe/db" VERSION="20200818" COMMENT="XMLDB file for Moodle mod/swipe"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -45,7 +45,7 @@
         <FIELD NAME="cardid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the item"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User ID of the user giving the like/rating"/>
         <FIELD NAME="liked" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="User likes the item"/>
-        <FIELD NAME="rating" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Rating the user gives the item"/>
+        <FIELD NAME="swipeid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Rating the user gives the item"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
