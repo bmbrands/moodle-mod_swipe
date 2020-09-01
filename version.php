@@ -18,15 +18,15 @@
  * Defines the version of Swipe
  *
  * @package    mod_swipe
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019071902;
-$plugin->requires  = 2018050800;
+$plugin->version   = 2020090100;
+$plugin->requires  = 2019111800;
 $plugin->cron      = 0;
 $plugin->component = 'mod_swipe';
 $plugin->maturity  = MATURITY_STABLE;

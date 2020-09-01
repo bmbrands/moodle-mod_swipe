@@ -19,7 +19,7 @@
  *
  * @package    mod_swipe
  * @category   external
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/externallib.php');
 /**
  * Mod swipe external functions.
  *
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

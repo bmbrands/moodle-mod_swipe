@@ -18,7 +18,7 @@
  * mod swipe rendrer
  *
  * @package    mod_swipe
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ use moodle_url;
  * mod swipe renderer
  *
  * @package    mod_swipe
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

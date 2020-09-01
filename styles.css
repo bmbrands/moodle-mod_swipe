@@ -1,7 +1,7 @@
 .swipelike .wrap {
   min-height: 437px;
   display: flex;
-  overflow: hidden; }
+  overflow: visible; }
   .swipelike .wrap.hidden {
     display: none;
     min-height: 0;

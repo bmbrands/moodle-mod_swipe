@@ -14,18 +14,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Thin wrapper allowing us to load the lightbox.js
+ * Thin wrapper for ordering cards
  *
- * @module      mod_swipe/swipe_wrapper
- * @package     mod_swipe
- * @copyright   2019 Bas Brands <bas@sonsbeekmedia.nl>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_swipe
+ * @copyright  2020 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define(
 [
     'jquery',
-    'mod_swipe/sortable_list',
+    'core/sortable_list',
     'core/custom_interaction_events',
     'core/notification',
     'core/ajax'

@@ -18,7 +18,7 @@
  * The main swipe configuration form
  *
  * @package    mod_swipe
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  * Module instance settings form
  *
  * @package    mod_swipe
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

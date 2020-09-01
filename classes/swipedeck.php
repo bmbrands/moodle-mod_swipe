@@ -22,7 +22,7 @@ defined('MOODLE_INTERNAL') || die();
  * Mod swipe swipedeck class
  *
  * @package    mod_swipe
- * @copyright  2019 Cambridge
+ * @copyright  2020 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
