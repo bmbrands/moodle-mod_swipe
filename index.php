@@ -46,41 +46,6 @@ $PAGE->set_context($coursecontext);
 
 echo $OUTPUT->header();
 
-        $userid = 6;
-    $sql = "
-            SELECT DISTINCT ctx.id
-              FROM {swipe} s
-              JOIN {modules} m
-                ON m.name = :swipe
-              JOIN {course_modules} cm
-                ON cm.instance = s.id
-               AND cm.module = m.id
-              JOIN {context} ctx
-                ON ctx.instanceid = cm.id
-               AND ctx.contextlevel = :modulelevel
-         LEFT JOIN {swipe_item} swi
-                ON swi.swipeid = s.id
-         LEFT JOIN {swipe_userfeedback} swu
-                ON swu.cardid = swi.id
-               AND swu.userid = :userid1
-         LEFT JOIN {swipe_swipefeedback} swf
-                ON swf.swipeid = s.id
-               AND swf.userid = :userid2
-             WHERE swi.id IS NOT NULL
-                OR swu.id IS NOT NULL
-                OR swf.id IS NOT NULL";
-
-        $params = [
-            'swipe' => 'swipe',
-            'modulelevel' => CONTEXT_MODULE,
-            'userid1'      => $userid,
-            'userid2'      => $userid
-        ];
-
-        $res = $DB->get_records_sql($sql, $params);
-
-        echo '<pre>' . print_r($res, true) . '</pre>';
-
 if (! $swipedecks = get_all_instances_in_course('swipe', $course)) {
     notice(get_string('noswipedecks', 'swipe'), new moodle_url('/course/view.php', array('id' => $course->id)));
 }

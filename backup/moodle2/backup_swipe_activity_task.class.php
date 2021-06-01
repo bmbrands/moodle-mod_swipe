@@ -28,8 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/swipe/backup/moodle2/backup_swipe_stepslib.php');
 
 /**
- * certificate backup task that provides all the settings and steps to perform one
- * complete backup of the activity
+ * Backup activity for mod_swipe
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_swipe_activity_task extends backup_activity_task {
 
@@ -54,7 +58,7 @@ class backup_swipe_activity_task extends backup_activity_task {
      * @param string $content
      * @return string
      */
-    static public function encode_content_links($content) {
+    public static function encode_content_links($content) {
         global $CFG;
 
         $base = preg_quote($CFG->wwwroot, "/");

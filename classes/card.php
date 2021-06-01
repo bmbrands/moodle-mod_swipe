@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Mod swipe Card class
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace mod_swipe;
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,13 +35,28 @@ defined('MOODLE_INTERNAL') || die();
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class card {
 
+    /**
+     * @var object module context.
+     */
     private $context;
+
+    /**
+     * @var object course module.
+     */
     private $cm;
+
+    /**
+     * @var object card database record.
+     */
     public $record;
 
+    /**
+     * Card class instance.
+     *
+     * @param int $id Card id
+     */
     public function __construct($id = null) {
         global $DB;
 
@@ -111,10 +135,6 @@ class card {
 
     /**
      * Delete a card.
-     *
-     * @param  \stdClass $data Form data
-     * @param  Object $context Swipe deck context
-     * @return Object Card Object
      */
     public function delete() {
         global $DB;
@@ -146,7 +166,7 @@ class card {
     /**
      * Get the card youtube video embed url.
      *
-     * @return Object swipe deck module context
+     * @return string embed url.
      */
     public function get_embed_url() {
         $embed = '';
@@ -193,7 +213,7 @@ class card {
      *
      * @return String Card image url.
      */
-    public function get_image_url($preview = false) {
+    public function get_image_url() {
         global $CFG;
 
         if (!$file = $this->get_stored_file()) {
@@ -291,7 +311,7 @@ class card {
     /**
      * Store a cookie that contains an array of rated items.
      *
-     *
+     * @param  Int $id rated card id.
      */
     private function store_cookie_rated($id) {
         $rated = [];
@@ -301,7 +321,6 @@ class card {
         $rated[] = $id;
         setcookie('rated', json_encode($rated), time() + (86400 * 30), "/");
     }
-
 
     /**
      * Like a card
@@ -362,6 +381,10 @@ class card {
         return $this->record->itemtype;
     }
 
+    /**
+     * Unlike a card
+     *
+     */
     public function unlike() {
         global $DB, $USER, $SESSION;
 

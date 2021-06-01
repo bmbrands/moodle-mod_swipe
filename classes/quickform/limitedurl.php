@@ -14,29 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ *  Add youtube form element
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/form/url.php');
 
+/**
+ *  Add youtube form element
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class MoodleQuickForm_limitedurl extends MoodleQuickForm_url {
-    // HTML for help button, if empty then no help.
-    public $_helpbutton = '';
 
-    // If true label will be hidden.
-    public $_hiddenLabel = false;
+
+    /**
+     * @var string Form label to add.
+     */
+    public $_hiddenlabel = false;
 
     /**
      * Returns HTML for this form element.
      *
      * @return string
      */
-    public function toHtml() {
+    public function tohtml() {
         global $PAGE, $OUTPUT;
 
         $id     = $this->_attributes['id'];
         $elname = $this->_attributes['name'];
 
-        if ($this->_hiddenLabel) {
+        if ($this->_hiddenlabel) {
             $this->_generateId();
             $str = '<label class="accesshide" for="'.$this->getAttribute('id').'" >'.
                         $this->getLabel().'</label>'.parent::toHtml();

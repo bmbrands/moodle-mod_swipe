@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for creating/editing an item.
+ * Form for creating/editing an card.
  *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
@@ -28,9 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->dirroot.'/mod/swipe/classes/quickform/limitedurl.php');
 require_once($CFG->dirroot.'/mod/swipe/classes/quickform/uploader.php');
-require_once($CFG->dirroot.'/mod/swipe/classes/quickform/uploader_standard.php');
 
 /**
+ * Form used for creating or editing a card
+ *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
@@ -92,7 +93,7 @@ class mod_swipe_card_form extends moodleform {
         if ($card) {
             if ($type == 1) {
                 $mform->addElement('hidden', 'contenttype', 'image');
-                $mform->addElement('uploader_standard', 'content', get_string('contenttype_image', 'swipe'), '0',
+                $mform->addElement('uploader', 'content', get_string('contenttype_image', 'swipe'), '0',
                 $pickeroptions);
             }
             if ($type == 2) {
@@ -116,7 +117,7 @@ class mod_swipe_card_form extends moodleform {
             $mform->disabledIf('description', 'contenttype', 'eq', 'image');
 
             // Image type.
-            $mform->addElement('uploader_standard', 'content', get_string('contenttype_image', 'swipe'), '0',
+            $mform->addElement('uploader', 'content', get_string('contenttype_image', 'swipe'), '0',
                 $pickeroptions);
             $mform->addHelpButton('content', 'content', 'swipe');
             $mform->disabledIf('content', 'contenttype', 'eq', 'video');

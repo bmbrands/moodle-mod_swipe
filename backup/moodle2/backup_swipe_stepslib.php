@@ -26,10 +26,18 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Define the complete swipe structure for backup, with file and id annotations
+ * Backup steps for mod_swipe
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_swipe_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Get the structure of the backup.
+     */
     protected function define_structure() {
 
         // To know if we are including userinfo.

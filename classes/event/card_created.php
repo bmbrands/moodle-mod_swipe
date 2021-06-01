@@ -28,6 +28,7 @@ namespace mod_swipe\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * The mod_swipe_item created event.
  *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
@@ -47,11 +48,21 @@ class card_created extends \core\event\base {
         $this->data['objecttable'] = 'swipe_item';
     }
 
+    /**
+     * Get the event description.
+     *
+     * @return string
+     */
     public function get_description() {
         return "The user with id '$this->userid' has created the card with id '$this->objectid' in the Swipe deck " .
             "with course module id '$this->contextinstanceid'.";
     }
 
+    /**
+     * Get event string.
+     *
+     * @return string
+     */
     public static function get_name() {
         return get_string('eventcardcreated', 'mod_swipe');
     }

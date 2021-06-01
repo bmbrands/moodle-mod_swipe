@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Mod swipe swipedeck class
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace mod_swipe;
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,15 +35,39 @@ defined('MOODLE_INTERNAL') || die();
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class swipedeck  {
 
+    /**
+     * @var object module context.
+     */
     public $context;
+
+    /**
+     * @var array list of swipedeck cards.
+     */
     protected $cards = null;
+
+    /**
+     * @var object coursemodule.
+     */
     public $cm;
+
+    /**
+     * @var object swipedeckname.
+     */
     public $name;
+
+    /**
+     * @var int maximum number of cards in this deck.
+     */
     public $maxcards;
 
+    /**
+     * swipdeck class instance.
+     *
+     * @param object $cm Course module
+     * @param object $context Swipedeck module context.
+     */
     public function __construct($cm, $context) {
         $this->cm = $cm;
         $this->context = $context;
@@ -162,6 +195,7 @@ class swipedeck  {
     /**
      * Store user feedback about this card deck.
      *
+     * @param string $text feedback contents.
      * @return int feedback DB id.
      */
     public function store_feedback($text) {

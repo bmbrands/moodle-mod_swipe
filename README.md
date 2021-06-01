@@ -1,5 +1,7 @@
 # Mode swipe feedback activity for Moodle
 
+[![Build Status](https://travis-ci.com/bmbrands/moodle-mod_swipe.svg?branch=master)](https://travis-ci.com/bmbrands/moodle-mod_swipe)
+
 The swipe feedback activity is a fun and simple activity where users can provide feedback on images, text or videos, displayed on a deck of cards that can be swiped right if liked, or swiped left if disliked.
 
 At the end of the deck the user has the opportunity to provide some more feedback by entering some text to be read by the teacher that setup the deck.

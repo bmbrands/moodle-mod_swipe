@@ -53,6 +53,7 @@ class mod_swipe_external extends external_api {
      * Set liked item.
      *
      * @param int $itemid item id
+     * @param bool $like true if liked
      *
      * @return  array list of courses and warnings
      */

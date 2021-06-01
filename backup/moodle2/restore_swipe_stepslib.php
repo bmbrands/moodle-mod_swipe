@@ -26,14 +26,18 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Define all the restore steps that will be used by the restore_swipe_activity_task
- */
-
-/**
- * Structure step to restore one swipe activity
+ * Restore steps for mod_swipe
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_swipe_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Define the structure of the restore steps.
+     */
     protected function define_structure() {
 
         $paths = array();
@@ -59,6 +63,11 @@ class restore_swipe_activity_structure_step extends restore_activity_structure_s
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Process the swipe backup data.
+     *
+     * @param array $data backup data.
+     */
     protected function process_swipe($data) {
         global $DB;
 
@@ -73,6 +82,11 @@ class restore_swipe_activity_structure_step extends restore_activity_structure_s
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Process the userfeedback backup data.
+     *
+     * @param array $data backup data.
+     */
     protected function process_swipe_userfeedback($data) {
         global $DB;
 
@@ -84,6 +98,11 @@ class restore_swipe_activity_structure_step extends restore_activity_structure_s
         $newfeedbackid = $DB->insert_record('swipe_userfeedback', $data);
     }
 
+    /**
+     * Process the swipfeedback backup data.
+     *
+     * @param array $data backup data.
+     */
     protected function process_swipe_swipefeedback($data) {
         global $DB;
 
@@ -95,6 +114,11 @@ class restore_swipe_activity_structure_step extends restore_activity_structure_s
         $newfeedbackid = $DB->insert_record('swipe_userfeedback', $data);
     }
 
+    /**
+     * Process a swie item.
+     *
+     * @param array $data backup data.
+     */
     protected function process_swipe_item($data) {
         global $DB;
 
@@ -108,6 +132,10 @@ class restore_swipe_activity_structure_step extends restore_activity_structure_s
         $this->set_mapping('swipe_item', $oldid, $newitemid, true);
     }
 
+    /**
+     * Steps after restore.
+     *
+     */
     protected function after_execute() {
         global $DB;
 

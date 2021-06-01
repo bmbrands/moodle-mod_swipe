@@ -27,14 +27,10 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/card_form.php');
 require_once($CFG->dirroot.'/repository/lib.php');
 
-$s = optional_param('s', 0, PARAM_INT);
+$s = required_param('s', PARAM_INT);
 $i = optional_param('i', 0, PARAM_INT);
 $bulk = optional_param('bulk', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_TEXT);
-
-if (!$s) {
-    print_error('missingparameter');
-}
 
 $cm  = get_coursemodule_from_instance('swipe', $s, 0, false, MUST_EXIST);
 $context = context_module::instance($cm->id);
@@ -137,13 +133,14 @@ if ($mform->is_cancelled()) {
     $mform->set_data($data);
 }
 
-$maxcards = $swipedeck->maxcards;
-if (!$card && $maxcards != 0 && count($swipedeck->getcards()) >= $maxcards) {
-    print_error('errortoomanycards', 'swipe', '', $maxcards);
-}
-
 echo $OUTPUT->header();
 
-$mform->display();
+if (count($swipedeck->getcards()) >= $swipedeck->maxcards) {
+    echo $OUTPUT->notification(get_string('errortoomanycards', 'swipe'), 'notifysuccess');
+} else {
+    $mform->display();
+}
+
+
 
 echo $OUTPUT->footer();

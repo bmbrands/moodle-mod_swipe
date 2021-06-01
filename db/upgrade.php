@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Upgrade instructions for mod_swipe.
+ *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>
@@ -24,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Execute swipe upgrade from the given old version
+ * Execute swipe upgrade from the given old version.
  *
  * @param int $oldversion
  * @return bool

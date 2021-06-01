@@ -14,37 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Form element class for uploading cards.
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/form/filepicker.php');
 
+/**
+ *  Form element class for uploading cards.
+ *
+ * @package    mod_swipe
+ * @copyright  2021 Cambridge Assessment International Education
+ * @author     Bas Brands <bas@sonsbeekmedia.nl>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class MoodleQuickForm_uploader extends MoodleQuickForm_filepicker {
 
-    public $_helpbutton = '';
-
-    public $repo = '';
-
-    public function __construct($elementName = null, $elementLabel = null, $attributes = null, $options = null) {
-        parent::__construct($elementName, $elementLabel, $attributes, $options);
-        $this->repo = $options['repo'];
-    }
-
     /**
-     * Legacy style constructor, for BC.
-     * @deprecated since 2.9, use MoodleQuickForm_uploader::__construct instead
+     * Returns HTML for this form element.
+     *
+     * @return string
      */
-    public function MoodleQuickForm_uploader() {
-        $msg = 'Legacy constructor called, please update your code to call php5 constructor!';
-        if (function_exists('debugging')) {
-            debugging($msg, DEBUG_DEVELOPER);
-        } else {
-            trigger_error($msg, E_USER_DEPRECATED);
-        }
-        $args = func_get_args();
-        call_user_func_array('self::__construct', $args);
-    }
-
-    public function toHtml() {
+    public function tohtml() {
         global $CFG, $COURSE, $USER, $PAGE, $OUTPUT;
         $id     = $this->_attributes['id'];
         $elname = $this->_attributes['name'];
@@ -69,26 +67,11 @@ class MoodleQuickForm_uploader extends MoodleQuickForm_filepicker {
         $args->accepted_types = $this->_options['accepted_types'] ? $this->_options['accepted_types'] : '*';
         $args->return_types = $this->_options['return_types'];
         $args->itemid = $draftitemid;
-        $args->maxbytes = 0;
+        $args->maxbytes = $this->_options['maxbytes'];
         $args->context = $PAGE->context;
         $args->buttonname = $elname.'choose';
         $args->elementname = $elname;
-
-        // We can only tell the filepicker that we want FILE_REFERENCE repos
-        // and which specific repo types we don't want. So here we build a list
-        // of all FILE_REFERENCE supplying repos that aren't thebox to force
-        // it to only display that one.
-        $refrepos = repository::get_instances(array(
-            'currentcontext' => $PAGE->context,
-            'return_types' => FILE_REFERENCE,
-        ));
-        $disabled = array();
-        foreach ($refrepos as $repo) {
-            if (($name = $repo->get_typename()) != $this->repo) {
-                $disabled[] = $name;
-            }
-        }
-        $args->disable_types = $disabled;
+        $args->disable_types = array('thebox');
 
         $html = $this->_getTabs();
         $fp = new file_picker($args);
@@ -109,7 +92,7 @@ class MoodleQuickForm_uploader extends MoodleQuickForm_filepicker {
             'action' => 'browse',
             'itemid' => $draftitemid,
             'subdirs' => 0,
-            'maxbytes' => 0,
+            'maxbytes' => $options->maxbytes,
             'maxfiles' => 1,
             'ctx_id' => $PAGE->context->id,
             'course' => $PAGE->course->id,

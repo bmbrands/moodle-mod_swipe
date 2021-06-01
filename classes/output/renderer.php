@@ -54,6 +54,31 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
+     * Set the card variables for rendering based on the card type.
+     *
+     * @param Object $card the card.
+     * @return Object the card with set variables.
+     */
+    private function card_export($card) {
+        if ($card->record->itemtype == 1) { // Image.
+            $card->isimage = true;
+            $card->img = $card->get_image_url();
+            $card->caption = $card->record->caption;
+            $card->itemhtml = $this->embed_html($card);
+        } else if ($card->record->itemtype == 2) { // Video.
+            $card->isvideo = true;
+            $card->caption = $card->record->caption;
+            $card->embed = $card->get_embed_url();
+        } else { // Text.
+            $card->type = 3;
+            $card->istext = true;
+            $card->text = $card->record->description;
+            $card->caption = $card->record->caption;
+        }
+        return $card;
+    }
+
+    /**
      * Render a carousel of cards.
      *
      * @param Object $swipedeck
@@ -109,23 +134,7 @@ class renderer extends plugin_renderer_base {
                 $card->preloadid = $previous[count($previous) - 2];
             }
 
-            if ($card->record->itemtype == 1) { // Image.
-                $card->isimage = true;
-                $card->img = $card->get_image_url();
-                $card->caption = $card->record->caption;
-                $card->itemhtml = $this->embed_html($card);
-            } else if ($card->record->itemtype == 2) { // Video.
-                $card->isvideo = true;
-                $card->caption = $card->record->caption;
-                $card->embed = $card->get_embed_url();
-            } else { // Text.
-                $card->type = 3;
-                $card->istext = true;
-                $card->text = $card->record->description;
-                $card->caption = $card->record->caption;
-            }
-
-            $template->cards[] = $card;
+            $template->cards[] = $this->card_export($card);
             $previous[] = $card->record->id;
             $count++;
         }
@@ -170,21 +179,7 @@ class renderer extends plugin_renderer_base {
 
         foreach ($cards as $card) {
             $card->id = $card->record->id;
-            if ($card->record->itemtype == 1) { // Image.
-                $card->isimage = true;
-                $card->img = $card->get_image_url();
-                $card->caption = $card->record->caption;
-                $card->itemhtml = $this->embed_html($card);
-            } else if ($card->record->itemtype == 2) { // Video.
-                $card->isvideo = true;
-                $card->caption = $card->record->caption;
-                $card->embed = $card->get_embed_url();
-            } else { // Text.
-                $card->type = 3;
-                $card->istext = true;
-                $card->text = $card->record->description;
-                $card->caption = $card->record->caption;
-            }
+            $card = $this->card_export($card);
             $card->editcard = new moodle_url('/mod/swipe/card.php', ['s' => $cm->instance, 'i' => $card->record->id]);
             $card->deletecard = new moodle_url('/mod/swipe/card.php',
                 ['s' => $cm->instance, 'i' => $card->record->id, 'action' => 'delete']);
@@ -413,7 +408,8 @@ class renderer extends plugin_renderer_base {
 
     /**
      * Add the management links to the template Object.
-     * @param Object &$template Template object being rendered.
+     *
+     * @param Object $template Template object being rendered.
      * @param Object $cm Swipedeck course module instance.
      */
     private function add_manage_links(&$template, $cm) {

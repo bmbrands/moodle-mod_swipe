@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Install instructions for mod swipe
+ *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
  * @author     Bas Brands <bas@sonsbeekmedia.nl>

@@ -28,6 +28,7 @@ namespace mod_swipe\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * The mod_swipe viewed event.
  *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
