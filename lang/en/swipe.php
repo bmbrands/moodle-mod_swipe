@@ -16,7 +16,7 @@
 
 
 /**
- * English strings for the swipe deck
+ * English strings for the swipe
  *
  * @package    mod_swipe
  * @copyright  2021 Cambridge Assessment International Education
@@ -40,30 +40,30 @@ $string['contenttype_text'] = 'Text';
 $string['contenttype_video'] = 'Video';
 $string['disliked'] = 'Disliked';
 $string['downloadswipereport'] = 'Download report';
-$string['editswipesettings'] = 'Edit swipe deck';
+$string['editswipesettings'] = 'Edit swipe';
 $string['endofdeck'] = 'End of deck message';
 $string['enterfeedback'] = 'Enter your feedback here';
 $string['errortoomanycards'] = 'Cannot add card, the card deck has a maximum of 50 cards';
-$string['eventcardcreated'] = 'Swipe deck card created';
-$string['eventcarddeleted'] = 'Swipe deck card deleted';
-$string['eventcardupdated'] = 'Swipe deck card updated';
+$string['eventcardcreated'] = 'Swipe card created';
+$string['eventcarddeleted'] = 'Swipe card deleted';
+$string['eventcardupdated'] = 'Swipe card updated';
 $string['externalurl'] = 'External URL';
 $string['externalurl_help'] = 'Currently links to images and videos are supported.';
 $string['feedback'] = 'Send us some feedback!';
 $string['image-video-text'] = 'Add text, image or video';
 $string['liked'] = 'Liked';
-$string['modulename'] = 'Swipe deck';
-$string['modulenameplural'] = 'Swipe decks';
-$string['noswipedecks'] = 'No swipe decks found';
-$string['notenoughcards'] = 'Please add more cards to this swipe deck';
+$string['modulename'] = 'Swipe';
+$string['modulenameplural'] = 'Swipe';
+$string['noswipedecks'] = 'No swipes found';
+$string['notenoughcards'] = 'Please add more cards to this swipe';
 $string['pluginadministration'] = 'Swipe administration';
-$string['pluginname'] = 'Media swipe';
+$string['pluginname'] = 'Swipe';
 $string['sendfeedback'] = 'Send feedback';
-$string['swipename'] = 'Swipe deck name';
+$string['swipename'] = 'Swipe name';
 $string['swipename_help'] = '';
 $string['thankyou'] = 'Feedback received, thank you!';
-$string['viewdeck'] = 'View swipe deck';
-$string['viewswipe'] = 'View swipe deck';
+$string['viewdeck'] = 'View swipe';
+$string['viewswipe'] = 'View swipe';
 $string['viewswipereport'] = 'View swipe report';
 $string['youtubeurl'] = 'Youtube URL';
 $string['youtubeurl_help'] = 'Youtube URL';
